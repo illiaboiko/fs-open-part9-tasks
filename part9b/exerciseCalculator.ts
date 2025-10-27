@@ -1,4 +1,4 @@
-interface exerciseData {
+interface ExerciseAnalysis {
   periodLength: number
   trainingDays: number
   success: boolean
@@ -8,7 +8,31 @@ interface exerciseData {
   average: number
 }
 
-const calculateExercises = (hours: number[], target: number) => {
+interface ExerciseData {
+  target: number
+  hours: number[]
+}
+
+const parseArguments = (args: string[]): ExerciseData => {
+  if (args.length < 5) {
+    throw new Error(
+      'Note enough arguments. Specify like so: target, [hour, hour...(at least 2 days)]'
+    )
+  }
+  if (args.slice(2).every((element) => typeof Number(element) === "number")) {
+    return {
+      target: Number(args[2]),
+      hours: args.slice(3).map((el) => Number(el)),
+    }
+  } else {
+    throw new Error('Provided values were not numbers!')
+  }
+}
+
+const calculateExercises = (
+  target: number,
+  hours: number[]
+): ExerciseAnalysis => {
   interface Rating {
     rating: number
     description: string
@@ -32,20 +56,31 @@ const calculateExercises = (hours: number[], target: number) => {
 
     return ratingObj
   }
-  const totalDays = hours.length
+  const periodLength = hours.length
   const trainingDays = hours.filter((d) => d > 0).length
-  const averageDaily = hours.reduce((a, b) => a + b) / hours.length
-  const { rating, description, success } = calculateRating(target, averageDaily)
+  const average = hours.reduce((a, b) => a + b) / hours.length
+  const { rating, description, success } = calculateRating(target, average)
 
   return {
-    totalDays,
+    periodLength,
     trainingDays,
     success,
     rating,
-    description,
+    ratingDescription: description,
     target,
-    averageDaily,
+    average,
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  const { target, hours } = parseArguments(process.argv)
+  console.log(calculateExercises(target, hours))
+} catch (error: unknown) {
+  let errorMessage = 'Smth went wrong: '
+  if (error instanceof Error) {
+    errorMessage += error.message
+  }
+  console.log(errorMessage)
+}
+
+export {}
