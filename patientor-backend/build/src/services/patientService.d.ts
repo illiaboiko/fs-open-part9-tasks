@@ -1,8 +1,8 @@
-import { Patient, NonSensitivePatient } from "../types";
+import { Patient, NonSensitivePatient, NewPatientEntry } from "../types";
 declare const _default: {
     getEntries: () => Patient[];
     getNonSensitiveEntries: () => NonSensitivePatient[];
-    addPatient: (name: string, dateOfBirth: string, ssn: string, gender: string, occupation: string) => Patient;
+    addPatient: (entry: NewPatientEntry) => Patient;
     findById: (id: string) => NonSensitivePatient | undefined;
 };
 export default _default;
