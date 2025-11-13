@@ -1,3 +1,9 @@
+* {
+  /* margin: 0; */
+  /* padding: 0; */
+  box-sizing: border-box;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,8 +17,39 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
+
+.container {
+  position: relative;
+}
+
+.notification {
+  /* display: none; */
+  position: absolute;
+  top: 3rem; 
+  left: 0;
+  right: 0;
+  /* text-align: center; */
+  background-color: #d4edda;
+  color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  pointer-events: none; /* so it doesn't block clicks */
+  opacity: 0;
+}
+
+.notification.show {
+  opacity: 1;
+}
+
+.notification.success {
+  background-color: #bdfabf;
+}
+
+.notification.error {
+  background-color: #f58d86;
+}
+
 
 a {
   font-weight: 500;
@@ -33,11 +70,6 @@ body {
   /* min-height: 100vh; */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
   border-radius: 8px;
   border: 1px solid black;
@@ -55,6 +87,10 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+form {
+  margin-top: 3rem;
 }
 
 @media (prefers-color-scheme: light) {

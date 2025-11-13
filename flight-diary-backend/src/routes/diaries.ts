@@ -30,7 +30,10 @@ router.post('/', (req, res) => {
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
-    res.status(400).send(errorMessage);
+    res.status(400).json({
+      error: error,
+      message: errorMessage,
+    });
   }
 });
 

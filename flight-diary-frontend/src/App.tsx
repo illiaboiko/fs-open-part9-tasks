@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import type { DiaryEntry } from './types'
+import type { DiaryEntry, AppNotification } from './types'
 import { getAllDiaries } from './services/diaryService'
 import Content from './components/Content'
 import NewEntryForm from './components/NewEntryForm'
+import NotificationComponent from './components/NotificationComponent'
 
 function App() {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
+  const [appNotification, setAppNotification] = useState<AppNotification | null>(null)
 
   useEffect(() => {
     getAllDiaries().then((data) => setDiaries(data))
@@ -16,11 +18,21 @@ function App() {
     setDiaries(diaries.concat(entry))
   }
 
+  const notify = (notification: AppNotification): void => {
+    setAppNotification(notification)
+    setTimeout(() => {
+      setAppNotification(null)
+    }, 3000)
+  }
+
   return (
     <>
-      <h1>Flight Diaries</h1>
-      <NewEntryForm onAddDiary={addEntry} />
-      <Content diaries={diaries} />
+      <div className="container">
+        <h1>Flight Diaries</h1>
+        <NotificationComponent notification={appNotification}/>
+        <NewEntryForm onAddDiary={addEntry} notify={notify}/>
+        <Content diaries={diaries} />
+      </div>
     </>
   )
 }

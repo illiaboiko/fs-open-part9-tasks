@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import type { DiaryEntry } from '../types'
+import type { AppNotification, DiaryEntry } from '../types'
 import { createDiary } from '../services/diaryService'
+import axios from 'axios'
 
 type newEntryFormProps = {
   onAddDiary: (entry: DiaryEntry) => void
+  notify: (notification: AppNotification) => void
 }
 
-const NewEntryForm = ({ onAddDiary }: newEntryFormProps) => {
+const NewEntryForm = ({ onAddDiary, notify }: newEntryFormProps) => {
   const [date, setDate] = useState('')
   const [visibility, setVisibility] = useState('')
   const [weather, setWeather] = useState('')
@@ -21,8 +23,16 @@ const NewEntryForm = ({ onAddDiary }: newEntryFormProps) => {
       setVisibility('')
       setWeather('')
       setComment('')
+      notify({ text: 'Success! Diary added', type: 'success' })
     } catch (error) {
-      console.log('Error Adding entry:', error)
+      if (axios.isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data.error?.message || error.response.data.message
+        notify({ text: msg, type: 'error' })
+        // notify({ text: `smth went wrong: ${error.message}`, type: 'error' })
+      } else {
+        notify({ text: 'Unknown Error', type: 'error' })
+      }
     }
   }
 

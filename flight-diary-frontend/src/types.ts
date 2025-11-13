@@ -10,3 +10,8 @@ export interface DiaryEntryExtended extends DiaryEntry {
 }
 
 export type NewDiaryEntry = Omit<DiaryEntryExtended, 'id'>
+
+export interface AppNotification {
+    text: string
+    type: "success" | "error"
+}
