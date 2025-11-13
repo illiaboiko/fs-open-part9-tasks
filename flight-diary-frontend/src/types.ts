@@ -1,8 +1,14 @@
+export const weatherValues = ['sunny', 'rainy', 'cloudy', 'stormy'] as const;
+export type Weather = typeof weatherValues[number];
+
+export const visibilityValues = ['great', 'good', 'ok', 'poor'] as const;
+export type Visibility = typeof visibilityValues[number];
+
 export interface DiaryEntry {
   id: number
   date: string
-  weather: string
-  visibility: string
+  weather: Weather
+  visibility: Visibility
 }
 
 export interface DiaryEntryExtended extends DiaryEntry {
@@ -15,3 +21,5 @@ export interface AppNotification {
     text: string
     type: "success" | "error"
 }
+
+
