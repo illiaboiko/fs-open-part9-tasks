@@ -1,13 +1,16 @@
-import { Entry } from "../../types";
+import { Diagnosis, Entry } from "../../types";
 
 interface Props {
   entries: Entry[];
+  diagnoses: Diagnosis[];
 }
 
-const PatientEntries = ({ entries }: Props) => {
-  if (!entries) {
-    return <div>Loading...</div>;
-  }
+const PatientEntries = ({ entries, diagnoses }: Props) => {
+  const findDiagnosisName = (code: string): string => {
+    const diagnosis = diagnoses.find((diag) => diag.code === code);
+    return diagnosis ? diagnosis.name : "..no diagnosis name available";
+  };
+
   if (entries.length === 0) {
     return <div>no entries yet..</div>;
   }
@@ -15,14 +18,18 @@ const PatientEntries = ({ entries }: Props) => {
     <>
       <h3>entries</h3>
       {entries.map((entry) => (
-        <p>
-          <span>{entry.date}</span> {entry.description}
+        <div key={entry.id}>
+          <p>
+            <strong>{entry.date}</strong> {entry.description}
+          </p>
           <ul>
             {entry.diagnosisCodes?.map((d) => (
-              <li key={d}>{d}</li>
+              <li key={d}>
+                {d} <span>{diagnoses ? findDiagnosisName(d) : 'no diagnoses data yet'}</span>
+              </li>
             ))}
           </ul>
-        </p>
+        </div>
       ))}
     </>
   );
