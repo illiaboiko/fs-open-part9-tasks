@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { newEntrySchema } from './utils';
+import { z } from "zod";
+import { newEntrySchema } from "./utils";
 export interface Diagnosis {
     code: string;
     name: string;
@@ -9,6 +9,8 @@ export declare enum Gender {
     Male = "male",
     Female = "female",
     Other = "other"
+}
+export interface Entry {
 }
 export interface Patient {
     id: string;

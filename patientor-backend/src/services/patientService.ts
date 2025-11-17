@@ -20,6 +20,14 @@ const findById = (id: string): NonSensitivePatient | undefined => {
   return patient;
 };
 
+const getNonSensitiveEntry = (id: string): NonSensitivePatient | undefined => {
+  const patient = patientsData.find((p) => p.id === id);
+  if (!patient) return undefined;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { ssn, ...rest } = patient;
+  return rest;
+};
+
 const addPatient = (entry: NewPatientEntry): Patient => {
   const newPatient = {
     id: crypto.randomUUID(),
@@ -33,6 +41,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 export default {
   getEntries,
   getNonSensitiveEntries,
+  getNonSensitiveEntry,
   addPatient,
   findById,
 };
