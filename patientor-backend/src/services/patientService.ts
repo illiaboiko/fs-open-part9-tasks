@@ -6,13 +6,16 @@ const getEntries = (): Patient[] => {
 };
 
 const getNonSensitiveEntries = (): NonSensitivePatient[] => {
-  return patientsData.map(({ id, name, dateOfBirth, gender, occupation }) => ({
-    id,
-    name,
-    dateOfBirth,
-    gender,
-    occupation,
-  }));
+  return patientsData.map(
+    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+      id,
+      name,
+      dateOfBirth,
+      gender,
+      occupation,
+      entries,
+    })
+  );
 };
 
 const findById = (id: string): NonSensitivePatient | undefined => {
@@ -23,7 +26,7 @@ const findById = (id: string): NonSensitivePatient | undefined => {
 const getNonSensitiveEntry = (id: string): NonSensitivePatient | undefined => {
   const patient = patientsData.find((p) => p.id === id);
   if (!patient) return undefined;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ssn, ...rest } = patient;
   return rest;
 };
@@ -32,6 +35,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
   const newPatient = {
     id: crypto.randomUUID(),
     ...entry,
+    entries: [],
   };
 
   patientsData.push(newPatient);

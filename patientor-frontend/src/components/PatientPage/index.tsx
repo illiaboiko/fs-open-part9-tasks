@@ -4,6 +4,7 @@ import patientService from "../../services/patients";
 import { useParams } from "react-router-dom";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
+import PatientEntries from "./PatientEntries";
 
 const PatientPage = () => {
   const { id } = useParams();
@@ -38,6 +39,7 @@ const PatientPage = () => {
         <p>ssn: **sensitive data**</p>
         <p>occupation: {patient.occupation}</p>
       </div>
+          <PatientEntries entries={patient.entries}/>
     </>
   );
 };
