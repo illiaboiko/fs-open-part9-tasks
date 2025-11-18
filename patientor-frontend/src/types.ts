@@ -30,12 +30,14 @@ interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
+
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
-  discharge: {
-    date: string;
-    criteria: string;
-  };
+  discharge: Discharge;
 }
 
 export interface SickLeave {
