@@ -12,9 +12,8 @@ router.get("/", (_req, res) => {
     res.send(patientService_1.default.getNonSensitiveEntries());
 });
 router.get("/:id", (req, res) => {
-    const patient = patientService_1.default.findById(req.params.id);
+    const patient = patientService_1.default.getNonSensitiveEntry(req.params.id);
     if (patient) {
-        console.log(patient);
         res.send(patient);
     }
     else {
@@ -22,6 +21,15 @@ router.get("/:id", (req, res) => {
     }
 });
 const newPatientParser = (req, _res, next) => {
+    try {
+        utils_1.newPatientSchema.parse(req.body);
+        next();
+    }
+    catch (error) {
+        next(error);
+    }
+};
+const newEntryParser = (req, _res, next) => {
     try {
         utils_1.newEntrySchema.parse(req.body);
         next();
@@ -41,6 +49,16 @@ const errorMiddleware = (error, _req, res, next) => {
 router.post("/", newPatientParser, (req, res) => {
     const addedPatient = patientService_1.default.addPatient(req.body);
     res.json(addedPatient);
+});
+router.post("/:id/entries", newEntryParser, (req, res) => {
+    const patient = patientService_1.default.getNonSensitiveEntry(req.params.id);
+    if (patient) {
+        const addedEntry = patientService_1.default.addEntry(req.params.id, req.body);
+        res.json(addedEntry);
+    }
+    else {
+        res.sendStatus(404);
+    }
 });
 router.use(errorMiddleware);
 exports.default = router;

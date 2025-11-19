@@ -19,12 +19,13 @@ const getEntries = () => {
     return patients_1.default;
 };
 const getNonSensitiveEntries = () => {
-    return patients_1.default.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+    return patients_1.default.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
         id,
         name,
         dateOfBirth,
         gender,
         occupation,
+        entries,
     }));
 };
 const findById = (id) => {
@@ -35,13 +36,20 @@ const getNonSensitiveEntry = (id) => {
     const patient = patients_1.default.find((p) => p.id === id);
     if (!patient)
         return undefined;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { ssn } = patient, rest = __rest(patient, ["ssn"]);
     return rest;
 };
 const addPatient = (entry) => {
-    const newPatient = Object.assign({ id: crypto.randomUUID() }, entry);
+    const newPatient = Object.assign(Object.assign({ id: crypto.randomUUID() }, entry), { entries: [] });
     patients_1.default.push(newPatient);
     return newPatient;
+};
+const addEntry = (patientId, entry) => {
+    const newEntry = Object.assign({ id: crypto.randomUUID() }, entry);
+    const patientToUpdate = patients_1.default.find(p => p.id === patientId);
+    patientToUpdate === null || patientToUpdate === void 0 ? void 0 : patientToUpdate.entries.push(newEntry);
+    return newEntry;
 };
 exports.default = {
     getEntries,
@@ -49,5 +57,6 @@ exports.default = {
     getNonSensitiveEntry,
     addPatient,
     findById,
+    addEntry,
 };
 //# sourceMappingURL=patientService.js.map

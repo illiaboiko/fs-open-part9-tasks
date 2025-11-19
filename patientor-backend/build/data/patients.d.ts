@@ -1,4 +1,4 @@
-import { Patient } from "../src/types";
-declare const patientsData: Patient[];
-export default patientsData;
+import { Patient } from '../src/types';
+declare const patients: Patient[];
+export default patients;
 //# sourceMappingURL=patients.d.ts.map
