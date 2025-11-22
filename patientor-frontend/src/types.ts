@@ -56,6 +56,16 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+// ⭐ Runtime list of valid discriminators
+export const entryTypes = [
+  "HealthCheck",
+  "Hospital",
+  "OccupationalHealthcare",
+] as const;
+
+// ⭐ Compile-time type inferred automatically
+export type EntryType = (typeof entryTypes)[number];
+
 export interface Patient {
   id: string;
   name: string;

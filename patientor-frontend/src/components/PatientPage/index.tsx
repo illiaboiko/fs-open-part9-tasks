@@ -88,6 +88,7 @@ const PatientPage = () => {
           onCloseForm={() => setShowNewEntryForm(false)}
           onSubmit={submitNewEntry}
           error={error}
+          diagnoses={diagnoses}
         />
       ) : (
         <Button
