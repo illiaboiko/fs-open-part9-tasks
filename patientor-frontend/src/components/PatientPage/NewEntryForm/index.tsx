@@ -14,18 +14,21 @@ import {
 import { SyntheticEvent, useState } from "react";
 import {
   Diagnosis,
-  HealthCheckEntryFromValues,
   HealthCheckRating,
   entryTypes,
   EntryType,
   Discharge,
+  SickLeave,
+  EntryFormValues,
 } from "../../../types";
 import HealthCheckFields from "./HealthCheckFields";
 import HospitalFields from "./HospitalFields";
+import DiagnosisCodesInput from "./DiagnosisCodesInput";
+import OccupationalFields from "./OccupationalFields";
 
 interface Props {
   onCloseForm: () => void;
-  onSubmit: (values: HealthCheckEntryFromValues) => void;
+  onSubmit: (values: EntryFormValues) => void;
   error?: string;
   diagnoses: Diagnosis[];
 }
@@ -36,7 +39,8 @@ const NewEntryForm = ({ onCloseForm, onSubmit, error, diagnoses }: Props) => {
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
   const [specialist, setSpecialist] = useState("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState("");
+
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 
   // states for HealthCheckrating type fields
   const [healthCheckRating, setHealthcheckRating] = useState(
@@ -49,6 +53,10 @@ const NewEntryForm = ({ onCloseForm, onSubmit, error, diagnoses }: Props) => {
     criteria: "",
   });
 
+  // states for Occupational type fields
+  const [employerName, setEmployerName] = useState("");
+  const [sickLeave, setSickLeave] = useState<SickLeave | undefined>(undefined);
+
   const onHealtcheckRatingChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
     const value = Number(event.target.value);
@@ -57,21 +65,44 @@ const NewEntryForm = ({ onCloseForm, onSubmit, error, diagnoses }: Props) => {
     }
   };
 
-  const toArray = (str: string): string[] => {
-    return str.split(",").map((s) => s.trim());
-  };
-
   const addEntry = (e: SyntheticEvent) => {
     e.preventDefault();
-    const diagnosisCodesArray = toArray(diagnosisCodes);
-    onSubmit({
-      date,
-      type: "HealthCheck",
-      description,
-      specialist,
-      healthCheckRating,
-      diagnosisCodes: diagnosisCodesArray,
-    });
+
+    const prepareEntryValues = (): EntryFormValues => {
+      switch (entryType) {
+        case "HealthCheck":
+          return {
+            description,
+            date,
+            specialist,
+            diagnosisCodes,
+            type: entryType,
+            healthCheckRating,
+          };
+        case "Hospital":
+          return {
+            description,
+            date,
+            specialist,
+            diagnosisCodes,
+            type: entryType,
+            discharge,
+          };
+        case "OccupationalHealthcare":
+          return {
+            description,
+            date,
+            specialist,
+            diagnosisCodes,
+            type: entryType,
+            employerName,
+          };
+      }
+    };
+
+    const entryValues = prepareEntryValues();
+
+    onSubmit(entryValues);
   };
 
   return (
@@ -133,16 +164,12 @@ const NewEntryForm = ({ onCloseForm, onSubmit, error, diagnoses }: Props) => {
               onChange={(e) => setSpecialist(e.target.value)}
               value={specialist}
             />
-            <TextField
-              id="diagnosis-codes"
-              name="diagnosis-codes"
-              label="Diagnosis Codes"
-              size="small"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              onChange={(e) => setDiagnosisCodes(e.target.value)}
+            <DiagnosisCodesInput
               value={diagnosisCodes}
+              diagnoses={diagnoses}
+              onChange={(codes) => {
+                setDiagnosisCodes(codes);
+              }}
             />
             {entryType === "HealthCheck" && (
               <HealthCheckFields
@@ -154,6 +181,16 @@ const NewEntryForm = ({ onCloseForm, onSubmit, error, diagnoses }: Props) => {
               <HospitalFields
                 discharge={discharge}
                 onDischargeChange={(obj: Discharge) => setDischarge(obj)}
+              />
+            )}
+            {entryType === "OccupationalHealthcare" && (
+              <OccupationalFields
+                employerName={employerName}
+                sickLeave={sickLeave}
+                onEmployerNameChange={(name) => setEmployerName(name)}
+                onSickLeaveChange={(obj: SickLeave | undefined) =>
+                  setSickLeave(obj)
+                }
               />
             )}
 

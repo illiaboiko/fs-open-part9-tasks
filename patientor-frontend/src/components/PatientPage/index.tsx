@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Diagnosis, HealthCheckEntryFromValues, Patient } from "../../types";
+import { Diagnosis, EntryFormValues, Patient } from "../../types";
 import patientService from "../../services/patients";
 import diagnosisService from "../../services/diagnoses";
 import { useParams } from "react-router-dom";
@@ -35,7 +35,7 @@ const PatientPage = () => {
     void fetchDiagnoses();
   }, []);
 
-  const submitNewEntry = async (values: HealthCheckEntryFromValues) => {
+  const submitNewEntry = async (values: EntryFormValues) => {
     if (!id) {
       setError("Cannot add entry: missing patinet ID");
       return;

@@ -42,7 +42,7 @@ export const newEntrySchema = z.discriminatedUnion("type", [
     sickLeave: z.object({
       startDate: z.iso.date(),
       endDate: z.iso.date()
-    }) 
+    }).optional()
     
   }),
   z.object({
